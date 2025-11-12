@@ -1,16 +1,20 @@
 class Solution:
     def findMaxForm(self, strs: list[str], m: int, n: int) -> int:
-        dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+        num_strs = len(strs)
+        dp = [[[0 for _ in range(num_strs + 1)] for _ in range(n + 1)] for _ in range(m + 1)]
 
-        for s in strs:
+        for k, s in enumerate(strs, 1):
             zeros_count = s.count("0")
             ones_count = s.count("1")
         
-            for i in range(m, zeros_count - 1, -1):
-                for j in range(n, ones_count - 1, -1):
-                    dp[i][j] = max(dp[i - zeros_count][j - ones_count] + 1, dp[i][j])
+            for i in range(m + 1):
+                for j in range(n + 1):
+                    dp[i][j][k] = dp[i][j][k - 1]
 
-        return dp[m][n]
+                    if i >= zeros_count and j >= ones_count:
+                        dp[i][j][k] = max(dp[i - zeros_count][j - ones_count][k - 1] + 1, dp[i][j][k])
+
+        return dp[m][n][num_strs]
 
 
 if __name__ == "__main__":
